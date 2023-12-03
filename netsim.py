@@ -6,7 +6,6 @@ Authors: Anthony Andujar, Tabetha Chubb
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
-
 import argparse
 import networkx as nx
 import matplotlib.pyplot as plt
