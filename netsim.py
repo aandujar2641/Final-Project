@@ -35,8 +35,8 @@ def immunization_iteration(graph, B, M):
 
 def main(network_file, infected_file, T, L, M, B):
     # Read input files
-    network = read_network_file(network_file)
-    initial_infected_nodes = read_infected_file(infected_file)
+    network = readNetworkFile(network_file)
+    initial_infected_nodes = readInfectedFile(infected_file)
 
     # Initialize graph and infected nodes
     graph = nx.Graph(network)
