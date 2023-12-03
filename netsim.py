@@ -10,13 +10,20 @@ import argparse
 import networkx as nx
 import matplotlib.pyplot as plt
 
-def read_network_file(network_file):
-    # Implement code to read the network configuration file
-    pass
+# Reads the network file into a graph variable
+def readNetworkFile(network):
+    graph = nx.Graph()
+    with open(network, 'r') as file:
+        for line in file:
+            source, target, probability = map(float, line.split())
+            graph.add_edge(int(source), int(target), probability=probability)
+    return graph
 
-def read_infected_file(infected_file):
-    # Implement code to read the initial infected nodes file
-    pass
+# Reads the infected nodes file into a variable
+def readInfectedFile(infectedFile):
+    with open(infectedFile, 'r') as file:
+        infectedNodes = {int(line.strip()) for line in file}
+    return infectedNodes
 
 def virus_spread_iteration(graph, infected_nodes, L):
     # Implement virus spread iteration
