@@ -19,9 +19,16 @@ def read_infected_file(filename):
 def simulate_virus_spread(graph, infected_nodes, probability_of_spread, L):
     new_infected = set()
 
+<<<<<<< HEAD
     for node in infected_nodes:
         neighbors = set(graph.neighbors(node))
         susceptible_neighbors = neighbors - infected_nodes
+=======
+def main(network_file, infected_file, T, L, M, B):
+    # Read input files
+    network = readNetworkFile(network_file)
+    initial_infected_nodes = readInfectedFile(infected_file)
+>>>>>>> c08c61b8b7878739c78f71b9da76f37b44e3b0f9
 
         for neighbor in susceptible_neighbors:
             if random.random() < probability_of_spread:
