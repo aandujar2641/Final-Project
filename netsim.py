@@ -5,16 +5,17 @@ import random
 
 
 def read_network_file(filename):
+    edges = []
     with open(filename, 'r') as file:
-        lines = file.readlines()
-        edges = [tuple(map(float, line.split(" "))) for line in lines]
+        for line in file:
+            source, target, probability = map(float, line.split())
+            edges.append((source, target, {'probability': probability}))
     return edges
 
 def read_infected_file(filename):
     with open(filename, 'r') as file:
-        lines = file.readlines()
-        infected_nodes = [float(line) for line in lines]
-    return infected_nodes
+        infected_nodes = [int(line) for line in file.read().splitlines()]
+    return set(infected_nodes)
 
 def simulate_virus_spread(graph, infected_nodes, probability_of_spread, L):
     new_infected = set()
@@ -27,11 +28,19 @@ def simulate_virus_spread(graph, infected_nodes, probability_of_spread, L):
             if random.random() < probability_of_spread:
                 new_infected.add(neighbor)
 
-    return new_infected, infected_nodes
+    return new_infected, infected_nodes.union(new_infected)
 
 def simulate_immunization(graph, immunized_nodes, B, M):
-    immunized_nodes = set(random.sample(set(graph.nodes) - immunized_nodes, B))
-    return immunized_nodes, immunized_nodes
+    nodes_list = list(set(graph.nodes) - immunized_nodes)
+
+    # Check if B is greater than or equal to the length of nodes_list
+    if B >= len(nodes_list):
+        new_immunized_nodes = set(nodes_list)
+    else:
+        new_immunized_nodes = set(random.sample(nodes_list, B))
+    
+    return new_immunized_nodes, immunized_nodes.union(new_immunized_nodes)
+
 
 def plot_simulation(iterations, infected_counts, susceptible_counts, immunized_counts):
     plt.plot(iterations, infected_counts, label='Infected Nodes')
@@ -44,21 +53,9 @@ def plot_simulation(iterations, infected_counts, susceptible_counts, immunized_c
     plt.show()
 
 def main():
-    '''
-    parser = argparse.ArgumentParser(description='Virus Spread and Containment Simulation')
-    parser.add_argument('-networkfile', type=str, default='infectedgraph.edges', help='Path to the network file')
-    parser.add_argument('-infectedfile', type=str, default='infectednodes.txt', help='Path to the infected nodes file')
-    #parser.add_argument('-T', type=int, required=True, help='Total number of iteration pairs')
-    #parser.add_argument('-L', type=int, required=True, help='Duration of infection for each node')
-    #parser.add_argument('-M', type=int, required=True, help='Duration of immunization for each node')
-    #parser.add_argument('-B', type=int, required=True, help='Number of antivirus shots for immunization')
-    args = parser.parse_args()
-'''
     # Read network and infected node files
-    edges = read_network_file("infectedgraph.edges")
-    #args.networkfile
-    infected_nodes = read_infected_file("infectednodes.txt")
-    #args.infectedfile
+    edges = read_network_file('infectedgraph.edges')
+    infected_nodes = read_infected_file('infectednodes.txt')
 
     # Create a graph from the network file
     G = nx.Graph()
@@ -71,14 +68,11 @@ def main():
     susceptible_counts = []
     immunized_counts = []
 
-    #(1, args.T + 1)
     for iteration in range(1, 500 + 1):
         # Virus Spread Iteration
         new_infected, infected_nodes = simulate_virus_spread(G, infected_nodes, probability_of_spread, 5)
-        #args.L
         # Immunization Iteration
-        immunized_nodes, immunized_nodes = simulate_immunization(G, immunized_nodes, 50, 10)
-        #args.B, args.M
+        immunized_nodes, infected_nodes = simulate_immunization(G, infected_nodes, 50, 10)
         # Update counts
         iterations.append(iteration)
         infected_counts.append(len(infected_nodes))
@@ -93,4 +87,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
