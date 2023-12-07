@@ -1,3 +1,8 @@
+'''
+Final Project - Virus Spread Containment Simulation
+CISC 489-012 
+Authors: Anthony Andujar, Tabetha Chubb
+'''
 import argparse
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -32,8 +37,6 @@ def simulate_virus_spread(graph, infected_nodes, probability_of_spread, L):
 
 def simulate_immunization(graph, immunized_nodes, B, M):
     nodes_list = list(set(graph.nodes) - immunized_nodes)
-
-    # Check if B is greater than or equal to the length of nodes_list
     if B >= len(nodes_list):
         new_immunized_nodes = set(nodes_list)
     else:
@@ -87,5 +90,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
+    
